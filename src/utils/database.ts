@@ -16,7 +16,7 @@ class Database {
     const { error } = await supabase
       .from('delivery_challans')
       .upsert({
-        id: parseInt(dc.id.replace(/\D/g, '')) || undefined,
+        id: parseInt(dc.id.replace(/\D/g, '')),
         date: dc.date,
         vendor_name: dc.vendorName,
         vendor_price: dc.vendorPrice,
@@ -99,9 +99,9 @@ class Database {
       .select('*')
       .eq('date', date)
       .eq('vendor_name', vendorName)
-      .single();
+      .maybeSingle();
 
-    if (error && error.code !== 'PGRST116') throw error;
+    if (error) throw error;
 
     if (!data) return null;
 
@@ -130,7 +130,7 @@ class Database {
     const { error } = await supabase
       .from('invoices')
       .upsert({
-        id: parseInt(invoice.id.replace(/\D/g, '')) || undefined,
+        id: parseInt(invoice.id.replace(/\D/g, '')),
         invoice_number: invoice.invoiceNumber,
         date: invoice.date,
         customer_name: invoice.customerName,
@@ -198,9 +198,9 @@ class Database {
       .from('invoices')
       .select('*')
       .eq('id', parseInt(id.replace(/\D/g, '')) || 0)
-      .single();
+      .maybeSingle();
 
-    if (error && error.code !== 'PGRST116') throw error;
+    if (error) throw error;
 
     if (!data) return null;
 
@@ -236,7 +236,7 @@ class Database {
     const { error } = await supabase
       .from('ledger_entries')
       .upsert({
-        id: parseInt(entry.id.replace(/\D/g, '')) || undefined,
+        id: parseInt(entry.id.replace(/\D/g, '')),
         date: entry.date,
         entity_name: entry.entityName,
         entity_type: entry.entityType,
@@ -308,9 +308,9 @@ class Database {
       .from('cash_flow')
       .select('*')
       .eq('id', 'current')
-      .single();
+      .maybeSingle();
 
-    if (error && error.code !== 'PGRST116') throw error;
+    if (error) throw error;
 
     if (!data) {
       return { cashBalance: 0, onlineBalance: 0, totalBalance: 0 };
